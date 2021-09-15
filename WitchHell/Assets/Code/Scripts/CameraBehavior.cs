@@ -17,13 +17,17 @@ public class CameraBehavior : MonoBehaviour
         mTransform = transform;
     }
 
-    private void Update()
+    private void LateUpdate()
+    {
+        MoveCamera();
+    }
+
+    private void MoveCamera()
     {
         Vector3 targPos = mTargetPosition.position;
         Vector3 actPos = mTransform.position;
         Vector3 newPos = Vector3.Lerp(targPos, actPos, mSpeedLerp);
         mTransform.position = newPos;
-
     }
 
 }

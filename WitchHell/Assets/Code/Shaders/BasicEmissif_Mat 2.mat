@@ -22,5 +22,5 @@ Material:
     m_Floats:
     - __dirty: 0
     m_Colors:
-    - _EmissifColor: {r: 2.9960785, g: 0.972549, b: 0.4862745, a: 0}
+    - _EmissifColor: {r: 5.992157, g: 1.945098, b: 0.972549, a: 0}
   m_BuildTextureStacks: []
