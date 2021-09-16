@@ -5,11 +5,219 @@ using UnityEngine.AI;
 
 public class DemonBase : MonoBehaviour
 {
-    private NavMeshAgent mAgent;
+    [Header("Looking At Player")]
+    [SerializeField]
+    private PlayerData mPlayerData;
+    [SerializeField]
+    private Transform mEyeTransform;
+    [SerializeField]
+    private float mHeightOfPlayer;
 
+    [Header("Patrol")]
+    [SerializeField]
+    private Transform[] mPatrolPointsTransform;
+    [SerializeField]
+    private float mPatrolSpeed = 3.0f;
+
+    [Header("Chase")]
+    [SerializeField]
+    private float mChaseSpeed = 2.0f;
+    [SerializeField]
+    private float mCloseChaseSpeed = 3.3f;
+
+    private NavMeshAgent mAgent;
+    [SerializeField]
+    private RaycastHit mHitInfo;
+
+    private PatrolPoint[] mPatrolPoints;
+    private Vector3 mNextPatrolGoal;
+    private int mPPcounter;
+    private float mWaitduration;
+    private bool mWaitingNewPath;
+
+    private enum Estate
+    {
+        Patrol,
+        Chase,
+        Count
+    }
+    private Estate mDemonState;
 
     private void Awake()
     {
         mAgent = GetComponent<NavMeshAgent>();
     }
+
+    private void Start()
+    {
+        mDemonState = Estate.Count;
+        SwitchState(Estate.Patrol);
+        if(mPatrolPointsTransform.Length > 0)
+        {
+            mPatrolPoints = new PatrolPoint[mPatrolPointsTransform.Length];
+        }
+        for (int i = 0;i < mPatrolPoints.Length; i++)
+        {
+            mPatrolPoints[i] = mPatrolPointsTransform[i].GetComponent<PatrolPoint>();
+        }
+        mPPcounter = 0;
+        mNextPatrolGoal = mPatrolPointsTransform[mPPcounter].position;
+        mAgent.SetDestination(mNextPatrolGoal);
+        mWaitingNewPath = false;
+    }
+
+    private void Update()
+    {
+        UpdateState();
+    }
+
+    #region State Methods
+    private void SwitchState(Estate newstate)
+    {
+        Debug.Log("Demon switched state");
+        OnExitState();
+        mDemonState = newstate;
+        OnEnterState();
+    }
+
+    private void OnEnterState()
+    {
+        switch (mDemonState)
+        {
+            case Estate.Patrol:
+                mAgent.speed = mPatrolSpeed;
+                break;
+            case Estate.Chase:
+                mAgent.ResetPath();
+                break;
+            case Estate.Count:
+                break;
+        }
+    }
+    private void UpdateState()
+    {
+        switch (mDemonState)
+        {
+            case Estate.Patrol:
+                if (SeePlayer())
+                {
+                    SwitchState(Estate.Chase);
+                }
+                else
+                {
+                    MoveToPP();
+                }
+                break;
+            case Estate.Chase:
+                if (!SeePlayer())
+                {
+
+                }
+                mAgent.SetDestination(mPlayerData.mPlayerPosition);
+                break;
+            case Estate.Count:
+                break;
+        }
+    }
+    private void OnExitState()
+    {
+        switch (mDemonState)
+        {
+            case Estate.Patrol:
+                break;
+            case Estate.Chase:
+                break;
+            case Estate.Count:
+                break;
+        }
+    }
+    #endregion
+
+    private bool SeePlayer()
+    {
+
+        Debug.Log("Entered See playerMethod");
+        Vector3 eyePos = mEyeTransform.position;
+        Vector3 playerPos = mPlayerData.mPlayerPosition;
+        playerPos = new Vector3(playerPos.x, playerPos.y + mHeightOfPlayer, playerPos.z);
+        
+        if (!Physics.Raycast(eyePos, playerPos, out mHitInfo))
+        { 
+            Debug.Log("See nothin'");
+            return false;
+        }
+        if (mHitInfo.transform.CompareTag("Player"))
+        {
+            Debug.Log("See Player");
+            return true;
+        }
+        else
+        {
+            Debug.Log("See something, but not the player");
+            return false;
+        }
+
+
+    }
+
+
+    private void MoveToPP()
+    {
+        //if(!mAgent.hasPath || mAgent.isStopped && !mWaitingNewPath)
+        //{
+        //    StartCoroutine(GetNewDestination(mWaitduration));
+        //    mWaitingNewPath = true;
+        //}
+        if (!mAgent.pathPending)
+        {
+            if (mAgent.remainingDistance <= mAgent.stoppingDistance)
+            {
+                if (!mAgent.hasPath || mAgent.velocity.sqrMagnitude == 0f)
+                {
+                    StartCoroutine(GoToNewDestination(mWaitduration));
+                    mPPcounter += 1;
+                    if (mPPcounter > mPatrolPointsTransform.Length - 1)
+                    {
+                        mPPcounter = 0;
+                    }
+                    mNextPatrolGoal = mPatrolPointsTransform[mPPcounter].position;
+                    mAgent.SetDestination(mNextPatrolGoal);
+                    mWaitduration = mPatrolPoints[mPPcounter].mWaitDuration;
+                    mAgent.isStopped = true;
+                    mWaitingNewPath = true;
+                }
+            }
+        }
+
+    }
+
+    private IEnumerator GoToNewDestination(float waitTime)
+    {
+        yield return new WaitForSeconds(waitTime);
+        mAgent.isStopped = false;
+        mWaitingNewPath = false;
+    }
+
+    private void OnDrawGizmos()
+    {
+        RaycastHit hitInfo;
+        Vector3 eyePos = mEyeTransform.position;
+        Vector3 playerPos = mPlayerData.mPlayerPosition;
+        playerPos = new Vector3(playerPos.x, playerPos.y + mHeightOfPlayer, playerPos.z);
+        if (Physics.Raycast(eyePos, playerPos, out hitInfo))
+        {
+            if (hitInfo.transform.CompareTag("Player"))
+            {
+                Debug.Log("See Player");
+                Gizmos.color = Color.red;
+            }
+            else
+            {
+                Gizmos.color = Color.blue;
+            }
+        }
+        Gizmos.DrawLine(eyePos, playerPos);
+    }
+
+
 }
