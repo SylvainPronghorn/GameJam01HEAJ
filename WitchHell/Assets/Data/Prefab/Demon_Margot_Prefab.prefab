@@ -1141,10 +1141,10 @@ MonoBehaviour:
   - {fileID: 0}
   mPatrolSpeed: 3
   mDetectionRange: 10
-  mChaseSpeed: 2
+  mChaseSpeed: 5
   mCloseChaseSpeed: 5
-  mRangeAttackPlayer: 1
-  mRangeRunAfterPlayer: 3
+  mRangeAttackPlayer: 3
+  mRangeRunAfterPlayer: 6
   mAnimator: {fileID: 437606225041024948}
   mNameDisplacementFloat: DisplacementBlend
   mIdleValue: 0

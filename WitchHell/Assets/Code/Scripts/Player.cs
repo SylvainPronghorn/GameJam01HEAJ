@@ -55,7 +55,8 @@ public class Player : MonoBehaviour
     private SkinnedMeshRenderer mMeshRenderer03;
     [SerializeField]
     private string mNameTriggerDeath = "Death";
-
+    [SerializeField]
+    private string mNameTriggerOpening = "ChestOpening";
 
 
     public static Player sInstance;
@@ -310,7 +311,7 @@ public class Player : MonoBehaviour
                 AnimateMaterials(mHideOpacityValue);
                 //mMaterial01.SetFloat(mNameFloatOpacityHandler, mHideOpacityValue);
             }
-            if (Input.GetKey(KeyCode.Space) && mCurrentPower > 0.0f)
+            if (Input.GetKey(KeyCode.Space) || Input.GetButton("Fire1") && mCurrentPower > 0.0f)
             {
                 Debug.Log("Use Powaaaaah");
                 mCurrentPower -= mSpeedUsagePower * Time.deltaTime;
@@ -428,6 +429,7 @@ public class Player : MonoBehaviour
         //{
         //    mGameManager.WinTheGame();
         //}
+        //if(collision.gameObject.CompareTag("Piece"))
     }
 
     private void OnTriggerEnter(Collider other)
@@ -448,6 +450,7 @@ public class Player : MonoBehaviour
             //mGainedPiece = true;
             //CoinBehavior.sInstance.HideCoinObj();
             //mCoinImage.SetActive(true);
+            mAnimator.SetTrigger(mNameTriggerOpening);
         }
         else if (other.gameObject.CompareTag("Demon"))
         {

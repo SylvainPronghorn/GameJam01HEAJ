@@ -36,7 +36,7 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.P) || Input.GetButtonDown("Start"))
+        if (Input.GetKeyDown(KeyCode.P) || Input.GetButtonDown("Start") || Input.GetButtonDown("Fire2"))
         {
             PauseGame();
         }
