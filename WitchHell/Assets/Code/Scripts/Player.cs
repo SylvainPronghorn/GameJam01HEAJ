@@ -42,6 +42,20 @@ public class Player : MonoBehaviour
     [SerializeField]
     private Image mPowerGaugeImage;
 
+    [Header("Animation")]
+    [SerializeField]
+    private Animator mAnimator;
+    [SerializeField]
+    private string mNameFloatMovement = "MovementIntensity";
+    [SerializeField]
+    private SkinnedMeshRenderer mMeshRenderer01;
+    [SerializeField]
+    private SkinnedMeshRenderer mMeshRenderer02;
+    [SerializeField]
+    private SkinnedMeshRenderer mMeshRenderer03;
+
+
+
     public static Player sInstance;
 
     public event EventHandler<OnHideCalledEventArgs> OnHideCalled;
@@ -72,8 +86,12 @@ public class Player : MonoBehaviour
 
     private bool mGainedPiece = false;
 
-    private MeshRenderer mMeshRenderer;
-    private Material mMaterial;
+
+
+    private Material mMaterial01;
+    private Material mMaterial02;
+    private Material mMaterial03;
+
 
     #region Unity Methods
     private void Awake()
@@ -113,9 +131,12 @@ public class Player : MonoBehaviour
         {
             StartCoroutine(GetGameManagerInstance(0.4f));
         }
-        mMeshRenderer = GetComponentInChildren<MeshRenderer>();
-        mMaterial = mMeshRenderer.materials[0];
-        mMaterial.SetFloat(mNameFloatOpacityHandler, mNormalOpacityValue);
+        //mMeshRenderer = GetComponentInChildren<MeshRenderer>();
+        mMaterial01 = mMeshRenderer01.materials[0];
+        mMaterial02 = mMeshRenderer02.materials[0];
+        mMaterial03 = mMeshRenderer03.materials[0];
+        AnimateMaterials(mNormalOpacityValue);
+        //mMaterial01.SetFloat(mNameFloatOpacityHandler, mNormalOpacityValue);
         mCoinImage.SetActive(false);
     }
 
@@ -215,6 +236,7 @@ public class Player : MonoBehaviour
         if (mCanReceiveInputs)
         {
             Vector3 dirMov = Vector3.zero;
+            Vector2 dir2D = Vector2.zero;
             bool usedKeyboard = false;
             float horizontalIntensity = 0.0f;
             float verticalIntensity = 0.0f;
@@ -247,13 +269,13 @@ public class Player : MonoBehaviour
             //mRigidBody.MovePosition(dirMov * mSpeed * Time.deltaTime);
             //mRigidBody.AddForce(dirMov * mSpeed * Time.deltaTime, ForceMode.Impulse);
             //mTransform.position += dirMov * mSpeed * Time.deltaTime;
-
+            
             if (!usedKeyboard)
             {
                 horizontalIntensity = Input.GetAxis("Horizontal"); // the horizontal Left Axis
                 verticalIntensity = Input.GetAxis("Vertical");     // the vertical Left Axis
 
-                Vector2 dir2D = new Vector2(horizontalIntensity, verticalIntensity); //for the animator
+                dir2D = new Vector2(horizontalIntensity, verticalIntensity); //for the animator
                 float movementAmplitude = Mathf.Clamp01(dir2D.magnitude);
 
 
@@ -269,6 +291,9 @@ public class Player : MonoBehaviour
             }
 
             GivePositionToScriptableObject();
+            float dirValue = dir2D.magnitude;
+            Debug.Log("dir value = " + dirValue);
+            mAnimator.SetFloat(mNameFloatMovement, dirValue);
         }
     }
 
@@ -279,7 +304,8 @@ public class Player : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Fire1") && mCurrentPower > 0.0f)
             {
                 OnHideCalled?.Invoke(this, new OnHideCalledEventArgs { isHiding = true });
-                mMaterial.SetFloat(mNameFloatOpacityHandler, mHideOpacityValue);
+                AnimateMaterials(mHideOpacityValue);
+                //mMaterial01.SetFloat(mNameFloatOpacityHandler, mHideOpacityValue);
             }
             if (Input.GetKey(KeyCode.Space) && mCurrentPower > 0.0f)
             {
@@ -300,13 +326,15 @@ public class Player : MonoBehaviour
                     mEnableRegainPowerCoroutine = StartCoroutine(EnableRegainPower(mWaitBeforeRegainPower));
                 }
                 OnHideCalled?.Invoke(this, new OnHideCalledEventArgs { isHiding = false });
-                mMaterial.SetFloat(mNameFloatOpacityHandler, mNormalOpacityValue);
+                AnimateMaterials(mNormalOpacityValue);
+                //mMaterial01.SetFloat(mNameFloatOpacityHandler, mNormalOpacityValue);
                 PowerDisplay();
             }
             if(mCurrentPower <= 0.0f)
             {
                 OnHideCalled?.Invoke(this, new OnHideCalledEventArgs { isHiding = false });
-                mMaterial.SetFloat(mNameFloatOpacityHandler, mNormalOpacityValue);
+                AnimateMaterials(mNormalOpacityValue);
+                //mMaterial01.SetFloat(mNameFloatOpacityHandler, mNormalOpacityValue);
                 PowerDisplay();
             }
         }
@@ -371,6 +399,13 @@ public class Player : MonoBehaviour
     private void OnGameWon(object sender, EventArgs e)
     {
         SwitchState(Estate.Count);
+    }
+
+    private void AnimateMaterials(float value)
+    {
+        mMaterial01.SetFloat(mNameFloatOpacityHandler, value);
+        mMaterial02.SetFloat(mNameFloatOpacityHandler, value);
+        mMaterial03.SetFloat(mNameFloatOpacityHandler, value);
     }
 
     private void OnCollisionEnter(Collision collision)
