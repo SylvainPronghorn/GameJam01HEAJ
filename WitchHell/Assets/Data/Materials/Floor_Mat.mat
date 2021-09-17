@@ -9,7 +9,7 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: Floor_Mat
   m_Shader: {fileID: 4800000, guid: 7edc8fd1293d90e4fa3f1cc920e87487, type: 3}
-  m_ShaderKeywords: _USEWORLDTILING_ON
+  m_ShaderKeywords: _SWITCHFADEUP_ON _USEWORLDTILING_ON
   m_LightmapFlags: 0
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -46,7 +46,10 @@ Material:
     - _FresnelScale: 1
     - _NDotLMul: 1.2
     - _NdotLAdd: 0.44
+    - _OffsetFadeUp: -1.12
+    - _Scale: 1
     - _ShadowRampDisplacement: 0.2
+    - _SwitchFadeUp: 1
     - _ToggleSwitch0: 0
     - _UseNdotLArtificialModifications: 0
     - _UseWorldTiling: 1

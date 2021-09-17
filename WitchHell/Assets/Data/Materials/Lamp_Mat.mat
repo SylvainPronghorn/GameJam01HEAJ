@@ -46,7 +46,10 @@ Material:
     - _FresnelScale: 1
     - _NDotLMul: 1
     - _NdotLAdd: 0
+    - _OffsetFadeUp: 0.5
+    - _Scale: 1
     - _ShadowRampDisplacement: 0.38
+    - _SwitchFadeUp: 0
     - _ToggleSwitch0: 0
     - _UseNdotLArtificialModifications: 0
     - _UseWorldTiling: 0
