@@ -318,7 +318,7 @@ public class Player : MonoBehaviour
                 if (mCurrentPower < 0.0f) mCurrentPower = 0.0f;
                 PowerDisplay();
             }
-            if (Input.GetKeyUp(KeyCode.Space) || Input.GetButtonUp("Fire1"))
+            if (Input.GetKeyUp(KeyCode.Space) || Input.GetButtonUp("Fire1") || Input.GetButtonUp("Fire1"))
             {
                 if(mEnableRegainPowerCoroutine != null) 
                 {
