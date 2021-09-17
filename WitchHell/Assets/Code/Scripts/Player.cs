@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
@@ -34,6 +35,12 @@ public class Player : MonoBehaviour
     private float mHideOpacityValue = 0.1f;
     [SerializeField]
     private string mNameFloatOpacityHandler = "_OpacityHandler";
+
+    [Header("UI")]
+    [SerializeField]
+    private GameObject mCoinImage;
+    [SerializeField]
+    private Image mPowerGaugeImage;
 
     public static Player sInstance;
 
@@ -86,6 +93,7 @@ public class Player : MonoBehaviour
         //mBoxCollider.isTrigger = true;
         //mBoxCollider.isTrigger = false;
         mCurrentPower = mMaxPower;
+        PowerDisplay();
         mCanRegainPower = true;
         mGainedPiece = false;
     }
@@ -108,6 +116,7 @@ public class Player : MonoBehaviour
         mMeshRenderer = GetComponentInChildren<MeshRenderer>();
         mMaterial = mMeshRenderer.materials[0];
         mMaterial.SetFloat(mNameFloatOpacityHandler, mNormalOpacityValue);
+        mCoinImage.SetActive(false);
     }
 
     private void Update()
@@ -277,6 +286,7 @@ public class Player : MonoBehaviour
                 Debug.Log("Use Powaaaaah");
                 mCurrentPower -= mSpeedUsagePower * Time.deltaTime;
                 if (mCurrentPower < 0.0f) mCurrentPower = 0.0f;
+                PowerDisplay();
             }
             if (Input.GetKeyUp(KeyCode.Space) || Input.GetButtonUp("Fire1"))
             {
@@ -291,11 +301,13 @@ public class Player : MonoBehaviour
                 }
                 OnHideCalled?.Invoke(this, new OnHideCalledEventArgs { isHiding = false });
                 mMaterial.SetFloat(mNameFloatOpacityHandler, mNormalOpacityValue);
+                PowerDisplay();
             }
             if(mCurrentPower <= 0.0f)
             {
                 OnHideCalled?.Invoke(this, new OnHideCalledEventArgs { isHiding = false });
                 mMaterial.SetFloat(mNameFloatOpacityHandler, mNormalOpacityValue);
+                PowerDisplay();
             }
         }
     }
@@ -308,13 +320,20 @@ public class Player : MonoBehaviour
             {
                 mCurrentPower = mMaxPower;
                 mCanRegainPower = false;
+                PowerDisplay();
             }
             else
             {
                 mCurrentPower += mSpeedGainPower * Time.deltaTime;
+                PowerDisplay();
             }
 
         }
+    }
+
+    private void PowerDisplay()
+    {
+        mPowerGaugeImage.fillAmount = Mathf.Clamp01(mCurrentPower / mMaxPower);
     }
 
     private void GivePositionToScriptableObject()
@@ -379,6 +398,7 @@ public class Player : MonoBehaviour
         {
             mGainedPiece = true;
             CoinBehavior.sInstance.HideCoinObj();
+            mCoinImage.SetActive(true);
         }
     }
 
