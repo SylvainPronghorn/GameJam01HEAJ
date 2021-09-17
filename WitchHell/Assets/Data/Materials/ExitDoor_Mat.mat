@@ -48,11 +48,16 @@ Material:
     - _NdotLAdd: 0
     - _ShadowRampDisplacement: 0.38
     - _ToggleSwitch0: 0
+    - _UseNdotLArtificialModifications: 0
+    - _UseWorldTiling: 0
     - __dirty: 0
     m_Colors:
     - _ASEOutlineColor: {r: 0.1698113, g: 0.1698113, b: 0.1698113, a: 0}
     - _EmissiveTint: {r: 0, g: 0, b: 0, a: 1}
     - _FresnelTint: {r: 1, g: 1, b: 1, a: 1}
+    - _MainTilingAndOffset: {r: 1, g: 1, b: 0, a: 0}
     - _MainTilingandOffset: {r: 1, g: 1, b: 0, a: 0}
     - _Tint: {r: 0.496351, g: 0.5490331, b: 0.6226415, a: 1}
+    - _TintAlbedo: {r: 1, g: 1, b: 1, a: 1}
+    - _WorldPosTilingandOffset: {r: 1, g: 1, b: 0, a: 0}
   m_BuildTextureStacks: []

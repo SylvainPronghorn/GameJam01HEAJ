@@ -9,7 +9,7 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: Floor_Mat
   m_Shader: {fileID: 4800000, guid: 7edc8fd1293d90e4fa3f1cc920e87487, type: 3}
-  m_ShaderKeywords: 
+  m_ShaderKeywords: _USEWORLDTILING_ON
   m_LightmapFlags: 0
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -48,11 +48,16 @@ Material:
     - _NdotLAdd: 0.44
     - _ShadowRampDisplacement: 0.2
     - _ToggleSwitch0: 0
+    - _UseNdotLArtificialModifications: 0
+    - _UseWorldTiling: 1
     - __dirty: 0
     m_Colors:
     - _ASEOutlineColor: {r: 1, g: 0.08962262, b: 0.08962262, a: 0}
     - _EmissiveTint: {r: 16, g: 7.8431373, b: 0, a: 1}
     - _FresnelTint: {r: 1, g: 1, b: 1, a: 1}
+    - _MainTilingAndOffset: {r: 1, g: 1, b: 0, a: 0}
     - _MainTilingandOffset: {r: 1, g: 1, b: 0, a: 0}
     - _Tint: {r: 1, g: 1, b: 1, a: 1}
+    - _TintAlbedo: {r: 1, g: 1, b: 1, a: 1}
+    - _WorldPosTilingandOffset: {r: 0.5, g: 0.5, b: 0, a: 0}
   m_BuildTextureStacks: []
