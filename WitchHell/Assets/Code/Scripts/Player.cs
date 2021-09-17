@@ -27,6 +27,22 @@ public class Player : MonoBehaviour
     [SerializeField]
     private float mWaitBeforeRegainPower = 1.0f;
 
+    [Header("Shader")]
+    [SerializeField]
+    private float mNormalOpacityValue = 1.0f;
+    [SerializeField]
+    private float mHideOpacityValue = 0.1f;
+    [SerializeField]
+    private string mNameFloatOpacityHandler = "_OpacityHandler";
+
+    public static Player sInstance;
+
+    public event EventHandler<OnHideCalledEventArgs> OnHideCalled;
+    public class OnHideCalledEventArgs : EventArgs
+    {
+        public bool isHiding;
+    }
+
     private enum Estate
     {
         Idle,
@@ -47,9 +63,22 @@ public class Player : MonoBehaviour
     private bool mCanRegainPower;
     private Coroutine mEnableRegainPowerCoroutine;
 
+    private bool mGainedPiece = false;
+
+    private MeshRenderer mMeshRenderer;
+    private Material mMaterial;
+
     #region Unity Methods
     private void Awake()
     {
+        if(sInstance == null)
+        {
+            sInstance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
         mTransform = transform;
         mRigidbody = GetComponent<Rigidbody>();
         //mRigidBody.centerOfMass = mCenterOfMassRigidbody.position;
@@ -58,6 +87,7 @@ public class Player : MonoBehaviour
         //mBoxCollider.isTrigger = false;
         mCurrentPower = mMaxPower;
         mCanRegainPower = true;
+        mGainedPiece = false;
     }
 
     private void Start()
@@ -68,12 +98,16 @@ public class Player : MonoBehaviour
         {
             mGameManager = GameManager.sInstance;
             mGameManager.OnPauseCalled += OnGamePaused;
+            mGameManager.OnGameWon += OnGameWon;
             mCanReceiveInputs = !mGameManager.IsPaused;
         }
         else
         {
             StartCoroutine(GetGameManagerInstance(0.4f));
         }
+        mMeshRenderer = GetComponentInChildren<MeshRenderer>();
+        mMaterial = mMeshRenderer.materials[0];
+        mMaterial.SetFloat(mNameFloatOpacityHandler, mNormalOpacityValue);
     }
 
     private void Update()
@@ -233,13 +267,18 @@ public class Player : MonoBehaviour
     {
         if (mCanReceiveInputs)
         {
+            if (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Fire1") && mCurrentPower > 0.0f)
+            {
+                OnHideCalled?.Invoke(this, new OnHideCalledEventArgs { isHiding = true });
+                mMaterial.SetFloat(mNameFloatOpacityHandler, mHideOpacityValue);
+            }
             if (Input.GetKey(KeyCode.Space) && mCurrentPower > 0.0f)
             {
                 Debug.Log("Use Powaaaaah");
                 mCurrentPower -= mSpeedUsagePower * Time.deltaTime;
                 if (mCurrentPower < 0.0f) mCurrentPower = 0.0f;
             }
-            if (Input.GetKeyUp(KeyCode.Space))
+            if (Input.GetKeyUp(KeyCode.Space) || Input.GetButtonUp("Fire1"))
             {
                 if(mEnableRegainPowerCoroutine != null) 
                 {
@@ -250,6 +289,13 @@ public class Player : MonoBehaviour
                 {
                     mEnableRegainPowerCoroutine = StartCoroutine(EnableRegainPower(mWaitBeforeRegainPower));
                 }
+                OnHideCalled?.Invoke(this, new OnHideCalledEventArgs { isHiding = false });
+                mMaterial.SetFloat(mNameFloatOpacityHandler, mNormalOpacityValue);
+            }
+            if(mCurrentPower <= 0.0f)
+            {
+                OnHideCalled?.Invoke(this, new OnHideCalledEventArgs { isHiding = false });
+                mMaterial.SetFloat(mNameFloatOpacityHandler, mNormalOpacityValue);
             }
         }
     }
@@ -301,6 +347,39 @@ public class Player : MonoBehaviour
     {
         Debug.Log("Pause reached player");
         mCanReceiveInputs = !e.isPaused;
+    }
+
+    private void OnGameWon(object sender, EventArgs e)
+    {
+        SwitchState(Estate.Count);
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        //if (collision.gameObject.CompareTag("Finish"))
+        //{
+        //    mGameManager.WinTheGame();
+        //}
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Finish"))
+        {
+            if (mGainedPiece)
+            {
+                mGameManager.WinTheGame();
+            }
+            else
+            {
+                //////---Affich text "You must regain piece"-----\\\\\\
+            }
+        }
+        else if (other.gameObject.CompareTag("Piece"))
+        {
+            mGainedPiece = true;
+            CoinBehavior.sInstance.HideCoinObj();
+        }
     }
 
 }

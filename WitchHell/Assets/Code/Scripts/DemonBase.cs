@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,6 +6,9 @@ using UnityEngine.AI;
 
 public class DemonBase : MonoBehaviour
 {
+    [SerializeField]
+    private float mWaitBeforeGetPlayerScript = 0.8f;
+
     [Header("Looking At Player")]
     [SerializeField]
     private PlayerData mPlayerData;
@@ -18,12 +22,18 @@ public class DemonBase : MonoBehaviour
     private Transform[] mPatrolPointsTransform;
     [SerializeField]
     private float mPatrolSpeed = 3.0f;
+    [SerializeField]
+    private float mDetectionRange = 10.0f;
 
     [Header("Chase")]
     [SerializeField]
     private float mChaseSpeed = 2.0f;
     [SerializeField]
     private float mCloseChaseSpeed = 3.3f;
+    [SerializeField]
+    private float mRangeAttackPlayer = 1.0f;
+    [SerializeField]
+    private float mRangeRunAfterPlayer = 3.0f;
 
     private NavMeshAgent mAgent;
     [SerializeField]
@@ -34,10 +44,14 @@ public class DemonBase : MonoBehaviour
     private int mPPcounter;
     private float mWaitduration;
     private bool mWaitingNewPath;
+    private Player mPlayer;
+    private bool mPlayerisHiding;
+    private GameManager mGameManager;
 
     private enum Estate
     {
         Patrol,
+        Idle,
         Chase,
         Count
     }
@@ -51,7 +65,6 @@ public class DemonBase : MonoBehaviour
     private void Start()
     {
         mDemonState = Estate.Count;
-        SwitchState(Estate.Patrol);
         if(mPatrolPointsTransform.Length > 0)
         {
             mPatrolPoints = new PatrolPoint[mPatrolPointsTransform.Length];
@@ -64,12 +77,29 @@ public class DemonBase : MonoBehaviour
         mNextPatrolGoal = mPatrolPointsTransform[mPPcounter].position;
         mAgent.SetDestination(mNextPatrolGoal);
         mWaitingNewPath = false;
+        mPlayer = Player.sInstance;
+        if(mPlayer != null)
+        {
+            mPlayerisHiding = false;
+            mPlayer.OnHideCalled += OnPlayerHiding;
+        }
+        else
+        {
+            StartCoroutine(GetPlayerScript(mWaitBeforeGetPlayerScript));
+        }
+        mGameManager = GameManager.sInstance;
+        if(mGameManager != null)
+        {
+            mGameManager.OnGameWon += GameIsWon;
+        }
+        SwitchState(Estate.Patrol);
     }
 
     private void Update()
     {
         UpdateState();
     }
+
 
     #region State Methods
     private void SwitchState(Estate newstate)
@@ -86,8 +116,12 @@ public class DemonBase : MonoBehaviour
         {
             case Estate.Patrol:
                 mAgent.speed = mPatrolSpeed;
+                MoveToPP();
                 break;
             case Estate.Chase:
+                mAgent.ResetPath();
+                break;
+            case Estate.Idle:
                 mAgent.ResetPath();
                 break;
             case Estate.Count:
@@ -111,14 +145,18 @@ public class DemonBase : MonoBehaviour
             case Estate.Chase:
                 if (!SeePlayer())
                 {
-
+                    SwitchState(Estate.Patrol);
                 }
                 mAgent.SetDestination(mPlayerData.mPlayerPosition);
+                break;
+            case Estate.Idle:
                 break;
             case Estate.Count:
                 break;
         }
     }
+
+    
     private void OnExitState()
     {
         switch (mDemonState)
@@ -126,6 +164,8 @@ public class DemonBase : MonoBehaviour
             case Estate.Patrol:
                 break;
             case Estate.Chase:
+                break;
+            case Estate.Idle:
                 break;
             case Estate.Count:
                 break;
@@ -136,24 +176,57 @@ public class DemonBase : MonoBehaviour
     private bool SeePlayer()
     {
 
-        Debug.Log("Entered See playerMethod");
+        //Debug.Log("Entered See playerMethod");
+        //Vector3 eyePos = mEyeTransform.position;
+        //Vector3 playerPos = mPlayerData.mPlayerPosition;
+        //playerPos = new Vector3(playerPos.x, playerPos.y + mHeightOfPlayer, playerPos.z);
+        //Debug.Log("Pos : " + playerPos);
+
+        //if (!Physics.Raycast(eyePos, playerPos, out mHitInfo))
+        //{ 
+        //    Debug.Log("See nothin'");
+        //    return false;
+        //}
+        //else
+        //{
+        //    if (mHitInfo.transform.CompareTag("Player"))
+        //    {
+        //        Debug.Log("See Player");
+        //        return true;
+        //    }
+        //    else
+        //    {
+        //        Debug.Log("See something, but not the player");
+        //        return false;
+        //    }
+
+        //}
+        if (mPlayerisHiding)
+        {
+            return false;
+        }
         Vector3 eyePos = mEyeTransform.position;
         Vector3 playerPos = mPlayerData.mPlayerPosition;
         playerPos = new Vector3(playerPos.x, playerPos.y + mHeightOfPlayer, playerPos.z);
+        float dist =  Vector3.Distance(eyePos, playerPos);
         
-        if (!Physics.Raycast(eyePos, playerPos, out mHitInfo))
-        { 
-            Debug.Log("See nothin'");
-            return false;
-        }
-        if (mHitInfo.transform.CompareTag("Player"))
+        
+        if(dist < mRangeAttackPlayer)
         {
-            Debug.Log("See Player");
+            //Launch Attack Anim
+        }
+        else if(dist < mRangeRunAfterPlayer)
+        {
+            //Launch Run Anim
+        }
+
+
+        if(dist<= mDetectionRange)
+        {
             return true;
         }
         else
         {
-            Debug.Log("See something, but not the player");
             return false;
         }
 
@@ -198,26 +271,54 @@ public class DemonBase : MonoBehaviour
         mWaitingNewPath = false;
     }
 
-    private void OnDrawGizmos()
+
+    private void OnPlayerHiding(object sender, Player.OnHideCalledEventArgs e)
     {
-        RaycastHit hitInfo;
-        Vector3 eyePos = mEyeTransform.position;
-        Vector3 playerPos = mPlayerData.mPlayerPosition;
-        playerPos = new Vector3(playerPos.x, playerPos.y + mHeightOfPlayer, playerPos.z);
-        if (Physics.Raycast(eyePos, playerPos, out hitInfo))
-        {
-            if (hitInfo.transform.CompareTag("Player"))
-            {
-                Debug.Log("See Player");
-                Gizmos.color = Color.red;
-            }
-            else
-            {
-                Gizmos.color = Color.blue;
-            }
-        }
-        Gizmos.DrawLine(eyePos, playerPos);
+        mPlayerisHiding = e.isHiding;
+        if (mPlayerisHiding) Debug.Log("Demon know player is hiding");
+        else Debug.Log("Demon know player is not hiding");
     }
+
+    private IEnumerator GetPlayerScript(float waitTime)
+    {
+        yield return new WaitForSeconds(waitTime);
+        mPlayer = Player.sInstance;
+        mPlayerisHiding = false;
+        mPlayer.OnHideCalled += OnPlayerHiding;
+    }
+
+    private IEnumerator GoToIdleCoroutine(float waitTime)
+    {
+        yield return new WaitForSeconds(waitTime);
+        SwitchState(Estate.Idle);
+    }
+
+    private void GameIsWon(object sender, EventArgs e)
+    {
+        SwitchState(Estate.Idle);
+        StartCoroutine(GoToIdleCoroutine(0.5f));
+    }
+
+    //private void OnDrawGizmos()
+    //{
+    //    RaycastHit hitInfo;
+    //    Vector3 eyePos = mEyeTransform.position;
+    //    Vector3 playerPos = mPlayerData.mPlayerPosition;
+    //    playerPos = new Vector3(playerPos.x, playerPos.y + mHeightOfPlayer, playerPos.z);
+    //    if (Physics.Raycast(eyePos, playerPos, out hitInfo))
+    //    {
+    //        if (hitInfo.transform.CompareTag("Player"))
+    //        {
+    //            Debug.Log("See Player");
+    //            Gizmos.color = Color.red;
+    //        }
+    //        else
+    //        {
+    //            Gizmos.color = Color.blue;
+    //        }
+    //    }
+    //    Gizmos.DrawLine(eyePos, playerPos);
+    //}
 
 
 }

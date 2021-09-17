@@ -7,11 +7,14 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager sInstance;
 
+    public event EventHandler<EventArgs> OnGameWon;
     public event EventHandler<OnPauseCallEventArgs> OnPauseCalled;
     public class OnPauseCallEventArgs : EventArgs
     {
         public bool isPaused;
     }
+
+
 
     private bool mIsPaused;
     public bool IsPaused
@@ -33,7 +36,7 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.P))
+        if (Input.GetKeyDown(KeyCode.P) || Input.GetButtonDown("Start"))
         {
             PauseGame();
         }
@@ -57,5 +60,10 @@ public class GameManager : MonoBehaviour
         {
             Time.timeScale = 1.0f;
         }
+    }
+
+    public void WinTheGame()
+    {
+        OnGameWon?.Invoke(this, new EventArgs { } );
     }
 }
