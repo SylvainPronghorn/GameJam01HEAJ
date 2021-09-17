@@ -20,7 +20,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _Albedo:
-        m_Texture: {fileID: 2800000, guid: 15f134573c03c064d84c80877b9e6d0c, type: 3}
+        m_Texture: {fileID: 2800000, guid: e1f15744a67ccf141b34a93a17d89293, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Emissive:
@@ -40,7 +40,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _ASEOutlineWidth: 1.33
+    - _ASEOutlineWidth: 0.08
     - _FresnelBias: 0
     - _FresnelPower: 4
     - _FresnelScale: 1
@@ -54,5 +54,5 @@ Material:
     - _EmissiveTint: {r: 0, g: 0, b: 0, a: 1}
     - _FresnelTint: {r: 1, g: 1, b: 1, a: 1}
     - _MainTilingandOffset: {r: 1, g: 1, b: 0, a: 0}
-    - _Tint: {r: 1, g: 1, b: 1, a: 1}
+    - _Tint: {r: 0.496351, g: 0.5490331, b: 0.6226415, a: 1}
   m_BuildTextureStacks: []

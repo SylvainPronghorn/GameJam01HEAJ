@@ -40,7 +40,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _ASEOutlineWidth: 1.33
+    - _ASEOutlineWidth: 0.04
     - _FresnelBias: 0
     - _FresnelPower: 4
     - _FresnelScale: 1
@@ -54,5 +54,5 @@ Material:
     - _EmissiveTint: {r: 0, g: 0, b: 0, a: 1}
     - _FresnelTint: {r: 1, g: 1, b: 1, a: 1}
     - _MainTilingandOffset: {r: 1, g: 1, b: 0, a: 0}
-    - _Tint: {r: 1, g: 1, b: 1, a: 1}
+    - _Tint: {r: 0.6213065, g: 0.63792974, b: 0.735849, a: 1}
   m_BuildTextureStacks: []
