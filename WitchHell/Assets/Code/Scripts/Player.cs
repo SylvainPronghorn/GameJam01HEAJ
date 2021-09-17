@@ -53,6 +53,8 @@ public class Player : MonoBehaviour
     private SkinnedMeshRenderer mMeshRenderer02;
     [SerializeField]
     private SkinnedMeshRenderer mMeshRenderer03;
+    [SerializeField]
+    private string mNameTriggerDeath = "Death";
 
 
 
@@ -138,6 +140,7 @@ public class Player : MonoBehaviour
         AnimateMaterials(mNormalOpacityValue);
         //mMaterial01.SetFloat(mNameFloatOpacityHandler, mNormalOpacityValue);
         mCoinImage.SetActive(false);
+        mPlayerData.mPlayerPosition = mTransform.position;
     }
 
     private void Update()
@@ -408,6 +411,17 @@ public class Player : MonoBehaviour
         mMaterial03.SetFloat(mNameFloatOpacityHandler, value);
     }
 
+    public void GetCoin()
+    {
+        mCoinImage.SetActive(true);
+        mGainedPiece = true;
+    }
+
+    public void CallEndGame()
+    {
+        mGameManager.WinTheGame();
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
         //if (collision.gameObject.CompareTag("Finish"))
@@ -431,9 +445,14 @@ public class Player : MonoBehaviour
         }
         else if (other.gameObject.CompareTag("Piece"))
         {
-            mGainedPiece = true;
-            CoinBehavior.sInstance.HideCoinObj();
-            mCoinImage.SetActive(true);
+            //mGainedPiece = true;
+            //CoinBehavior.sInstance.HideCoinObj();
+            //mCoinImage.SetActive(true);
+        }
+        else if (other.gameObject.CompareTag("Demon"))
+        {
+            SwitchState(Estate.Dying);
+            mAnimator.SetTrigger(mNameTriggerDeath);
         }
     }
 

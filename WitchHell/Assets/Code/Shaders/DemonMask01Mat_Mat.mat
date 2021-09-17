@@ -52,9 +52,15 @@ Material:
     - _NDotLMul: 0
     - _NDotLPower: 1
     - _NdotLAdd: 0
+    - _OffsetFadeUp: 0.5
     - _OpacityHandler: 1
     - _OpacityMul: 1.24
+    - _OutlineWidth: 0.037
+    - _Scale: 1
     - _ShadowRampDisplacement: 0.17
+    - _SwitchFadeUp: 0
+    - _ToggleSwitch0: 0
+    - _UseHeightGradient: 0
     - _UseNdotLArtificialModifications: 0
     - _UseWorldTiling: 0
     - __dirty: 0
@@ -66,6 +72,8 @@ Material:
     - _FresnelTint: {r: 1, g: 1, b: 1, a: 1}
     - _MainTilingAndOffset: {r: 1, g: 1, b: 0, a: 0}
     - _MainTilingandOffset: {r: 1, g: 1, b: 0, a: 0}
+    - _OutlineColor: {r: 2, g: 0.15686275, b: 0.0627451, a: 1}
+    - _Tint: {r: 1, g: 1, b: 1, a: 1}
     - _TintAlbedo: {r: 1, g: 1, b: 1, a: 1}
     - _WorldPosTilingandOffset: {r: 1, g: 1, b: 0, a: 0}
   m_BuildTextureStacks: []

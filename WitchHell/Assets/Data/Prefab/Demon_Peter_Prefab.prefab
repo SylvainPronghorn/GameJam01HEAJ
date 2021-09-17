@@ -71,9 +71,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4842720287545709726}
+  - component: {fileID: 7546091080290956427}
   m_Layer: 0
   m_Name: foot_ctrl
-  m_TagString: Untagged
+  m_TagString: Demon
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -92,6 +93,19 @@ Transform:
   m_Father: {fileID: 193247812229449313}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!135 &7546091080290956427
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 558268065999282245}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.41
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1072349967361804221
 GameObject:
   m_ObjectHideFlags: 0
@@ -628,6 +642,36 @@ SkinnedMeshRenderer:
     m_Center: {x: -0.11349195, y: -0.021999195, z: 0.00000014156103}
     m_Extent: {x: 0.22258064, y: 0.12937483, z: 0.18966016}
   m_DirtyAABB: 0
+--- !u!1 &4155512743236032809
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1885253252256411480}
+  m_Layer: 0
+  m_Name: EyeAnchor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1885253252256411480
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4155512743236032809}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 2.129, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 6308990268883921251}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4178706358221047466
 GameObject:
   m_ObjectHideFlags: 0
@@ -906,9 +950,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9105794194632230757}
+  - component: {fileID: 4358266451753133845}
   m_Layer: 0
   m_Name: head_ctrl
-  m_TagString: Untagged
+  m_TagString: Demon
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -930,6 +975,19 @@ Transform:
   m_Father: {fileID: 4730954822500672193}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!135 &4358266451753133845
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5702755058489790702}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.39
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &5703537102480618339
 GameObject:
   m_ObjectHideFlags: 0
@@ -1161,9 +1219,10 @@ GameObject:
   - component: {fileID: 103061543885026073}
   - component: {fileID: 6684988458131829720}
   - component: {fileID: 6684988458131829723}
+  - component: {fileID: 6816233598027487181}
   m_Layer: 0
   m_Name: Demon_Peter_Prefab
-  m_TagString: Untagged
+  m_TagString: Demon
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1181,6 +1240,7 @@ Transform:
   m_Children:
   - {fileID: 4409276641584093014}
   - {fileID: 2304399202568448793}
+  - {fileID: 1885253252256411480}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1239,7 +1299,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mWaitBeforeGetPlayerScript: 0.8
   mPlayerData: {fileID: 11400000, guid: 17d3770a9197aac4999b6d7f7fd3efa1, type: 2}
-  mEyeTransform: {fileID: 0}
+  mEyeTransform: {fileID: 1885253252256411480}
   mHeightOfPlayer: 0.75
   mPatrolPointsTransform:
   - {fileID: 0}
@@ -1248,9 +1308,29 @@ MonoBehaviour:
   mPatrolSpeed: 3
   mDetectionRange: 10
   mChaseSpeed: 2
-  mCloseChaseSpeed: 3.3
+  mCloseChaseSpeed: 5
   mRangeAttackPlayer: 1
   mRangeRunAfterPlayer: 3
+  mAnimator: {fileID: 103061543885026073}
+  mNameDisplacementFloat: DisplacementBlend
+  mIdleValue: 0
+  mWalkValue: 0.2
+  mRunValue: 0.75
+  mNameTriggerAttack: Attack
+--- !u!136 &6816233598027487181
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6684988458131829721}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 0.5
+  m_Height: 2.31
+  m_Direction: 1
+  m_Center: {x: 0, y: 1.02, z: 0}
 --- !u!1 &6729360334133151663
 GameObject:
   m_ObjectHideFlags: 0

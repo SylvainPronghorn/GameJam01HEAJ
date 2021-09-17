@@ -35,6 +35,20 @@ public class DemonBase : MonoBehaviour
     [SerializeField]
     private float mRangeRunAfterPlayer = 3.0f;
 
+    [Header("Animation")]
+    [SerializeField]
+    private Animator mAnimator;
+    [SerializeField]
+    private string mNameDisplacementFloat = "DisplacementBlend";
+    [SerializeField]
+    private float mIdleValue = 0.0f;
+    [SerializeField]
+    private float mWalkValue = 0.2f;
+    [SerializeField]
+    private float mRunValue = 0.75f;
+    [SerializeField]
+    private string mNameTriggerAttack = "Attack";
+
     private NavMeshAgent mAgent;
     [SerializeField]
     private RaycastHit mHitInfo;
@@ -115,13 +129,16 @@ public class DemonBase : MonoBehaviour
         switch (mDemonState)
         {
             case Estate.Patrol:
+                mAnimator.SetFloat(mNameDisplacementFloat, mWalkValue);
                 mAgent.speed = mPatrolSpeed;
                 MoveToPP();
                 break;
             case Estate.Chase:
+                mAnimator.SetFloat(mNameDisplacementFloat, mWalkValue);
                 mAgent.ResetPath();
                 break;
             case Estate.Idle:
+                mAnimator.SetFloat(mNameDisplacementFloat, mIdleValue);
                 mAgent.ResetPath();
                 break;
             case Estate.Count:
@@ -213,11 +230,13 @@ public class DemonBase : MonoBehaviour
         
         if(dist < mRangeAttackPlayer)
         {
+            mAnimator.SetTrigger(mNameTriggerAttack);
             //Launch Attack Anim
         }
         else if(dist < mRangeRunAfterPlayer)
         {
-            //Launch Run Anim
+            mAnimator.SetFloat(mNameDisplacementFloat, mRunValue);
+            mAgent.speed = mChaseSpeed;
         }
 
 
