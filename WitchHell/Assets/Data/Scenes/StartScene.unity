@@ -404,9 +404,9 @@ MonoBehaviour:
     m_LineSpacing: 1
   m_Text: "This project would not have been made without the incredible talents from
     :\n\nTutiaux Margot : Anim\nLecoq Peter : Anim\r\nVandermeer Sylvain : Tech\r\r\nPaquin
-    Camille : Art \r\nDupont Juliette : Art\r\nBaverez Tristan : art\n\nto help us,
-    we have used :\nUnity\nMaya\nVisual Studio\nSubstance\nZBrush\n\n\n\nThank you
-    for playing our game !"
+    Camille : Art \r\nDupont Juliette : Art\r\nBaverez Tristan : Art\n\nTo help us,
+    we have used :\nUnity\nMaya\nVisual Studio\nZBrush\n3DCoat\nClip Studio Paint\nVegas\nPhotoshop\nSubstance
+    Designer\nSubstance Painter\n\n\n\nThank you for playing our game !"
 --- !u!222 &657121930
 CanvasRenderer:
   m_ObjectHideFlags: 0
