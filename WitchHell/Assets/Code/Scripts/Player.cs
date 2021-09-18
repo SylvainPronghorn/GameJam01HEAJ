@@ -57,6 +57,8 @@ public class Player : MonoBehaviour
     private string mNameTriggerDeath = "Death";
     [SerializeField]
     private string mNameTriggerOpening = "ChestOpening";
+    [SerializeField]
+    private string mNameEncensActivation = "Attack";
 
 
     public static Player sInstance;
@@ -95,6 +97,7 @@ public class Player : MonoBehaviour
     private Material mMaterial02;
     private Material mMaterial03;
 
+    private bool mInvincible = false;
 
     #region Unity Methods
     private void Awake()
@@ -142,6 +145,7 @@ public class Player : MonoBehaviour
         //mMaterial01.SetFloat(mNameFloatOpacityHandler, mNormalOpacityValue);
         mCoinImage.SetActive(false);
         mPlayerData.mPlayerPosition = mTransform.position;
+        mInvincible = false;
     }
 
     private void Update()
@@ -305,20 +309,22 @@ public class Player : MonoBehaviour
     {
         if (mCanReceiveInputs)
         {
-            if (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Fire1") && mCurrentPower > 0.0f)
+            if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.A) || Input.GetButtonDown("Fire1") && mCurrentPower > 0.0f)
             {
                 OnHideCalled?.Invoke(this, new OnHideCalledEventArgs { isHiding = true });
                 AnimateMaterials(mHideOpacityValue);
+                mInvincible = true;
                 //mMaterial01.SetFloat(mNameFloatOpacityHandler, mHideOpacityValue);
+                mAnimator.SetTrigger(mNameEncensActivation);
             }
-            if (Input.GetKey(KeyCode.Space) || Input.GetButton("Fire1") && mCurrentPower > 0.0f)
+            if (Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.A) || Input.GetButton("Fire1") && mCurrentPower > 0.0f)
             {
                 Debug.Log("Use Powaaaaah");
                 mCurrentPower -= mSpeedUsagePower * Time.deltaTime;
                 if (mCurrentPower < 0.0f) mCurrentPower = 0.0f;
                 PowerDisplay();
             }
-            if (Input.GetKeyUp(KeyCode.Space) || Input.GetButtonUp("Fire1") || Input.GetButtonUp("Fire1"))
+            if (Input.GetKeyUp(KeyCode.Space) || Input.GetKeyUp(KeyCode.A) || Input.GetButtonUp("Fire1") || Input.GetButtonUp("Fire1"))
             {
                 if(mEnableRegainPowerCoroutine != null) 
                 {
@@ -333,6 +339,7 @@ public class Player : MonoBehaviour
                 AnimateMaterials(mNormalOpacityValue);
                 //mMaterial01.SetFloat(mNameFloatOpacityHandler, mNormalOpacityValue);
                 PowerDisplay();
+                mInvincible = false;
             }
             if(mCurrentPower <= 0.0f)
             {
@@ -340,6 +347,7 @@ public class Player : MonoBehaviour
                 AnimateMaterials(mNormalOpacityValue);
                 //mMaterial01.SetFloat(mNameFloatOpacityHandler, mNormalOpacityValue);
                 PowerDisplay();
+                mInvincible = false;
             }
         }
     }
@@ -452,7 +460,7 @@ public class Player : MonoBehaviour
             //mCoinImage.SetActive(true);
             mAnimator.SetTrigger(mNameTriggerOpening);
         }
-        else if (other.gameObject.CompareTag("Demon"))
+        else if (other.gameObject.CompareTag("Demon") && !mInvincible)
         {
             SwitchState(Estate.Dying);
             mAnimator.SetTrigger(mNameTriggerDeath);
