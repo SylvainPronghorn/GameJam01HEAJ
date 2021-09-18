@@ -24,7 +24,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Emissive:
-        m_Texture: {fileID: 2800000, guid: 6201fc784138fe54c8c6ade28a0381bb, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _NormalMap:
@@ -46,18 +46,24 @@ Material:
     - _FresnelScale: 0.57
     - _NDotLMul: 0
     - _NdotLAdd: 0
+    - _OffsetFadeUp: 0.5
+    - _OutlineWidth: 0.02
+    - _Scale: 1
     - _ShadowRampDisplacement: 0.4
     - _ToggleSwitch0: 0
     - _ToggleSwitch1: 1
+    - _UseHeightGradient: 0
     - _UseNdotLArtificialModifications: 0
     - _UseTilingbasic: 1
     - _UseWorldTiling: 0
     - __dirty: 0
     m_Colors:
     - _ASEOutlineColor: {r: 0.4433962, g: 0.4433962, b: 0.4433962, a: 0}
-    - _EmissiveTint: {r: 0, g: 0, b: 0, a: 1}
+    - _EmissiveTint: {r: 0.20754719, g: 0.20754719, b: 0.20754719, a: 1}
     - _FresnelTint: {r: 1, g: 1, b: 1, a: 1}
     - _MainTilingAndOffset: {r: 1, g: 1, b: 0, a: 0}
+    - _MainTilingandOffset: {r: 1, g: 1, b: 0, a: 0}
+    - _OutlineColor: {r: 0, g: 0, b: 0, a: 0}
     - _Tint: {r: 1, g: 1, b: 1, a: 1}
     - _TintAlbedo: {r: 1, g: 1, b: 1, a: 1}
     - _WorldPosTilingandOffset: {r: 0.1, g: 0.1, b: 0, a: 0}

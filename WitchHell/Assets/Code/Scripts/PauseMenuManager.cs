@@ -10,6 +10,12 @@ public class PauseMenuManager : MonoBehaviour
     private GameObject mPausePanel;
     [SerializeField]
     private GameObject mEndGamePanel;
+    [SerializeField]
+    private GameObject mTutoPanel;
+    [SerializeField]
+    private float mDurationTutoPanel;
+    [SerializeField]
+    private AudioSource mOnClickSound;
 
     private GameManager mGameManager;
 
@@ -23,6 +29,9 @@ public class PauseMenuManager : MonoBehaviour
         }
         mPausePanel.SetActive(false);
         mEndGamePanel.SetActive(false);
+        mTutoPanel.SetActive(true);
+        StartCoroutine(DisableTutoPanel(mDurationTutoPanel));
+        mOnClickSound.Stop();
     }
 
     private void PauseCalled(object sender, GameManager.OnPauseCallEventArgs e)
@@ -58,4 +67,15 @@ public class PauseMenuManager : MonoBehaviour
         SceneManager.LoadScene(levelIndex);
     }
 
+    private IEnumerator DisableTutoPanel(float waitTime)
+    {
+        yield return new WaitForSeconds(waitTime);
+        mTutoPanel.SetActive(false);
+    }
+
+    public void OnClickActivateSound()
+    {
+        mOnClickSound.Stop();
+        mOnClickSound.Play();
+    }
 }

@@ -60,6 +60,11 @@ public class Player : MonoBehaviour
     [SerializeField]
     private string mNameEncensActivation = "Attack";
 
+    [Header("Sound")]
+    [SerializeField]
+    private AudioSource mDeathSound;
+
+
 
     public static Player sInstance;
 
@@ -120,6 +125,7 @@ public class Player : MonoBehaviour
         PowerDisplay();
         mCanRegainPower = true;
         mGainedPiece = false;
+        mDeathSound.Stop();
     }
 
     private void Start()
@@ -290,6 +296,7 @@ public class Player : MonoBehaviour
                 dirMov = Vector3.forward * verticalIntensity + Vector3.right * horizontalIntensity;
             }
             dirMov.Normalize();
+            if(usedKeyboard)dir2D = new Vector2(dirMov.x, dirMov.z);
 
             mRigidbody.AddForce(dirMov * Time.fixedDeltaTime * mSpeed, ForceMode.VelocityChange);
 
@@ -299,7 +306,7 @@ public class Player : MonoBehaviour
             }
 
             GivePositionToScriptableObject();
-            float dirValue = dir2D.magnitude;
+            float dirValue = Mathf.Clamp01(dir2D.magnitude);
             Debug.Log("dir value = " + dirValue);
             mAnimator.SetFloat(mNameFloatMovement, dirValue);
         }
@@ -316,6 +323,7 @@ public class Player : MonoBehaviour
                 mInvincible = true;
                 //mMaterial01.SetFloat(mNameFloatOpacityHandler, mHideOpacityValue);
                 mAnimator.SetTrigger(mNameEncensActivation);
+                mCanRegainPower = false;
             }
             if (Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.A) || Input.GetButton("Fire1") && mCurrentPower > 0.0f)
             {
@@ -323,6 +331,7 @@ public class Player : MonoBehaviour
                 mCurrentPower -= mSpeedUsagePower * Time.deltaTime;
                 if (mCurrentPower < 0.0f) mCurrentPower = 0.0f;
                 PowerDisplay();
+                mCanRegainPower = false;
             }
             if (Input.GetKeyUp(KeyCode.Space) || Input.GetKeyUp(KeyCode.A) || Input.GetButtonUp("Fire1") || Input.GetButtonUp("Fire1"))
             {
@@ -340,6 +349,7 @@ public class Player : MonoBehaviour
                 //mMaterial01.SetFloat(mNameFloatOpacityHandler, mNormalOpacityValue);
                 PowerDisplay();
                 mInvincible = false;
+                mCanRegainPower = true;
             }
             if(mCurrentPower <= 0.0f)
             {
@@ -348,6 +358,7 @@ public class Player : MonoBehaviour
                 //mMaterial01.SetFloat(mNameFloatOpacityHandler, mNormalOpacityValue);
                 PowerDisplay();
                 mInvincible = false;
+                mCanRegainPower = true;
             }
         }
     }
@@ -464,6 +475,7 @@ public class Player : MonoBehaviour
         {
             SwitchState(Estate.Dying);
             mAnimator.SetTrigger(mNameTriggerDeath);
+            mDeathSound.Play();
         }
     }
 

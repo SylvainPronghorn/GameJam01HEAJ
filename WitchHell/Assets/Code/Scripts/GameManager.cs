@@ -14,7 +14,8 @@ public class GameManager : MonoBehaviour
         public bool isPaused;
     }
 
-
+    [SerializeField]
+    private AudioSource mEndGameSound;
 
     private bool mIsPaused;
     public bool IsPaused
@@ -32,6 +33,7 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        mEndGameSound.Stop();
     }
 
     private void Update()
@@ -64,6 +66,7 @@ public class GameManager : MonoBehaviour
 
     public void WinTheGame()
     {
+        //mEndGameSound.Play();
         OnGameWon?.Invoke(this, new EventArgs { } );
     }
 }

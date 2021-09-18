@@ -14,6 +14,8 @@ public class MainMenuManager : MonoBehaviour
     private GameObject mSplashArtPanel;
     [SerializeField]
     private float mDurationSplashArt;
+    [SerializeField]
+    private AudioSource mOnClickSound;
 
     private void Awake()
     {
@@ -45,8 +47,13 @@ public class MainMenuManager : MonoBehaviour
     {
         yield return new WaitForSeconds(waitTime);
         ActivateMainPanel();
-    } 
+    }
 
+    public void OnClickActivateSound()
+    {
+        mOnClickSound.Stop();
+        mOnClickSound.Play();
+    }
     public void QuitGame()
     {
 #if UNITY_EDITOR

@@ -49,6 +49,12 @@ public class DemonBase : MonoBehaviour
     [SerializeField]
     private string mNameTriggerAttack = "Attack";
 
+    [Header("Sounds")]
+    [SerializeField]
+    private AudioClip[] mAudioClips;
+    [SerializeField]
+    private AudioSource mAudioSource;
+
     private NavMeshAgent mAgent;
     [SerializeField]
     private RaycastHit mHitInfo;
@@ -112,6 +118,13 @@ public class DemonBase : MonoBehaviour
     private void Update()
     {
         UpdateState();
+        if (!mAudioSource.isPlaying)
+        {
+            int random = UnityEngine.Random.Range(0, mAudioClips.Length);
+            mAudioSource.clip = mAudioClips[random];
+            mAudioSource.Play();
+        }
+
     }
 
 

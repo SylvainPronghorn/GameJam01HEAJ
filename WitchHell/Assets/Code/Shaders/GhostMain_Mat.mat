@@ -37,11 +37,14 @@ Material:
     - _FresnelScale: 1
     - _NDotLIntensity: 1
     - _NDotLPower: 1
-    - _OpacityHandler: 1
+    - _OpacityHandler: 0.2
     - _OpacityMul: 1
     - __dirty: 0
     m_Colors:
     - _AlbedoTint: {r: 1, g: 1, b: 1, a: 0}
     - _EmissionTint: {r: 1, g: 1, b: 1, a: 0}
+    - _FresnelHiding: {r: 82.37243, g: 14.686557, b: 121.96227, a: 0}
+    - _HighColorFresnel: {r: 0, g: 0, b: 0, a: 0}
+    - _LowColorFresnel: {r: 0, g: 0, b: 0, a: 0}
     - _MainTilingandOffset: {r: 1, g: 1, b: 0, a: 0}
   m_BuildTextureStacks: []
